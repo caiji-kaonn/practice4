@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .main {
+      width: 1200px;
+      margin: 0 auto;
+    }
+
+    ul {
+      list-style: none;
+      max-width: 300px;
+      background-color: #000;
+      padding: 4px;
+    }
+
+    li {
+      margin-top: 4px;
+      padding-left: 10px;
+    }
+
+    a {
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 1px dashed #fff;
+      font-size: 24px;
+    }
+
+    a::before {
+      content: "☆"
+    }
+
+    .hide {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main">
+    <div class="nav"></div>
+  </div>
+</body>
+<script>
+  let navData = [{
+      id: 1,
+      text: '一级菜单A',
+      parentId: null
+    },
+    {
+      id: 2,
+      text: '一级菜单B',
+      parentId: null
+    },
+    {
+      id: 3,
+      text: '一级菜单C',
+      parentId: null
+    },
+    {
+      id: 4,
+      text: '二级菜单AA',
+      parentId: 1
+    },
+    {
+      id: 5,
+      text: '二级菜单AB',
+      parentId: 1
+    },
+    {
+      id: 6,
+      text: '二级菜单AC',
+      parentId: 1
+    },
+    {
+      id: 7,
+      text: '二级菜单BA',
+      parentId: 2
+    },
+    {
+      id: 8,
+      text: '二级菜单BB',
+      parentId: 2
+    },
+    {
+      id: 9,
+      text: '二级菜单BC',
+      parentId: 2
+    },
+    {
+      id: 10,
+      text: '二级菜单CA',
+      parentId: 3
+    },
+    {
+      id: 11,
+      text: '二级菜单CB',
+      parentId: 3
+    },
+    {
+      id: 12,
+      text: '二级菜单CC',
+      parentId: 3
+    },
+    {
+      id: 13,
+      text: '三级菜单AAA',
+      parentId: 4
+    },
+    {
+      id: 14,
+      text: '三级菜单BAA',
+      parentId: 7
+    },
+    {
+      id: 15,
+      text: '三级菜单CAA',
+      parentId: 10
+    }
+  ];
+
+  // 创建一级菜单，再封装成函数
+  function fn(arr, id) {
+    let tep = [];
+    arr.forEach(e => {
+      if (e.parentId === id) {
+        tep.push(e);
+        e.haizi2 = fn(arr, e.id);
+      }
+    })
+    return tep;
+  }
+
+  let menu = fn(navData, null);
+  // console.log(menu);
+
+
+  //  生成html结构，再封装成函数
+  function fn2(ulparent, arr) {
+    let ul = document.createElement('ul');
+    ul.classList.add('hide');
+    ulparent.appendChild(ul);
+    arr.forEach(e => {
+      let li = document.createElement('li');
+      ul.appendChild(li);
+      li.innerHTML = `<a href="#">${e.text}</a>`;
+      if (e.haizi2.length !== 0) {
+        fn2(li, e.haizi2);
+      }
+    })
+  }
+  // document.querySelector('.nav').appendChild(ul);
+  let nav = document.querySelector('.nav');
+  fn2(nav, menu)
+
+  nav.children[0].classList.remove('hide');
+  let li = document.querySelectorAll('li');
+  li.forEach(e => {
+    e.onclick = function (e) {
+      if (this.children.length != 1) {
+        this.children[1].classList.toggle('hide');
+      }
+    }
+  })
+</script>
+
+</html>
